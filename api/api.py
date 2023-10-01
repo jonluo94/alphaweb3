@@ -22,7 +22,7 @@ class BaseResponse(BaseModel):
 
     class Config:
         schema_extra = {
-            "example": {
+            "examples": {
                 "code": 200,
                 "msg": "success",
             }
@@ -59,7 +59,7 @@ class OpenaiChatMessage(BaseResponse):
 
     class Config:
         schema_extra = {
-            "example": {
+            "examples": {
                 "id": "chatcmpl-7QyqpwdfhqwajicIEznoc6Q47XAyW",
                 "object": "chat.completion",
                 "choices": [
@@ -108,7 +108,7 @@ class OpenaiDataResponse(BaseResponse):
 
     class Config:
         schema_extra = {
-            "example": {
+            "examples": {
                 "object": "list",
                 "data": [
                     {
@@ -136,11 +136,11 @@ class OpenaiDataResponse(BaseResponse):
 
 
 async def openai_chat(
-        model: str = Body(default="yqcloud", description="LLM", example="yqcloud"),
+        model: str = Body(default="yqcloud", description="LLM", examples="yqcloud"),
         messages: List[Dict] = Body(
             None,
             description="questions and answers",
-            example=[
+            examples=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": "Who won the world series in 2020?"},
             ],
