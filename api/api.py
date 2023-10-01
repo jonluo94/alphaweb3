@@ -146,6 +146,7 @@ async def openai_chat(
             ],
         ),
 ):
+    model = "yqcloud"
     history_messages = messages[:-1]
     chat_history = []
     temp_history = ["", ""]
