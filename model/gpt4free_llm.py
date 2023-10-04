@@ -7,6 +7,7 @@ from langchain.llms.base import LLM
 from langchain.llms.utils import enforce_stop_tokens
 
 import nest_asyncio
+
 nest_asyncio.apply()
 loop = asyncio.get_event_loop()
 
@@ -18,9 +19,11 @@ class AnswerResult:
 
 
 def call_g4f_model():
-    my_list = ["deepai", "yqcloud", "gptgo", "aivvm"]
+    my_list = ["yqcloud", "gptgo", "aivvm"]
     random_value = random.choice(my_list)
+    print("call_g4f_model", random_value)
     return random_value
+
 
 def call_g4f_provider(model: str, messages: []):
     response: str
