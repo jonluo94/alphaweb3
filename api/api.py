@@ -1,4 +1,6 @@
+import hashlib
 import json
+import os
 import parser
 
 import time
@@ -6,15 +8,17 @@ import uuid
 from typing import List, Optional, Dict
 import pydantic
 import uvicorn
-from fastapi import Body, FastAPI
+from fastapi import Body, FastAPI, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, BaseConfig
 from starlette.staticfiles import StaticFiles
 
 from chain.chain import AlphaChain
 from model.gpt4free_llm import GPT4LLM
+from itoken import check_token
 
 BaseConfig.arbitrary_types_allowed = True
+
 
 class BaseResponse(BaseModel):
     code: int = pydantic.Field(200, description="HTTP status code")
@@ -135,7 +139,22 @@ class OpenaiDataResponse(BaseResponse):
         }
 
 
+class OpenaiTokenResponse(BaseResponse):
+    data: Dict = pydantic.Field(..., description="data")
+
+    class Config:
+        schema_extra = {
+            "examples": {
+                "data": {
+                    "token": "token",
+                },
+            }
+
+        }
+
+
 async def openai_chat(
+        authorization: Optional[str] = Header(None),
         model: str = Body(default="yqcloud", description="LLM", examples="yqcloud"),
         messages: List[Dict] = Body(
             None,
@@ -146,22 +165,30 @@ async def openai_chat(
             ],
         ),
 ):
+    # 检查token
+    token = authorization.replace("Bearer ", "")
+    if not check_token(token):
+        return BaseResponse(code=500, msg="tokenerror")
+
     model = "yqcloud"
     history_messages = messages[:-1]
+
     chat_history = []
-    temp_history = ["", ""]
+    system_role = ""
+    user_content = ""
     for history in history_messages:
+        if history["role"] == "system":
+            system_role = history["content"]
         if history["role"] == "user":
-            temp_history[0] = history["content"]
+            user_content = history["content"]
         if history["role"] == "assistant":
-            temp_history[1] = history["content"]
-            chat_history += [temp_history]
+            chat_history += [[user_content, history["content"]]]
 
     msg = messages[-1]
     if msg["role"] == "user":
         question = msg["content"]
         ac = AlphaChain(llm=GPT4LLM(model_name=model))
-        for res in ac.query(question, chat_history):
+        for res in ac.query(question, chat_history, system_role):
             pass
         print(res.history)
         resp = res.llm_output["answer"]
@@ -190,6 +217,28 @@ async def openai_models():
     return OpenaiDataResponse()
 
 
+async def openai_chat_token(
+        user_name: str = Body(..., description="user_name", examples="user"),
+        user_secret: str = Body(..., description="user_secret", examples="secret"),
+):
+    # 要加密的数据
+    data = f"alphaweb3-{user_name}"
+
+    hashed = hashlib.md5(data.encode())
+    secret = hashed.hexdigest()
+    # 获取哈希值
+    if secret != user_secret:
+        return OpenaiTokenResponse(msg="secreterror", data={})
+
+    token = f"alphaweb3-{user_name}-{user_secret}"
+    sha256 = hashlib.sha256()
+    sha256.update(token.encode('utf-8'))
+    token_value = sha256.hexdigest()
+    print(user_name, secret, token_value)  # 输出哈希值
+
+    return OpenaiTokenResponse(data={"token": token_value})
+
+
 def api_start(host, port):
     global app
 
@@ -202,12 +251,10 @@ def api_start(host, port):
         allow_headers=["*"],
     )
 
+    app.post("/v1/login", response_model=OpenaiTokenResponse)(openai_chat_token)
     app.post("/v1/chat/completions", response_model=OpenaiChatMessage)(openai_chat)
     app.get("/v1/models", response_model=OpenaiDataResponse)(openai_models)
 
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
     uvicorn.run(app, host=host, port=port)
-
-
-

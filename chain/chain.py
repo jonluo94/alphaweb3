@@ -15,8 +15,8 @@ class AlphaChain:
     def __init__(self, llm: GPT4LLM = GPT4LLM()):
         self.llm = llm
 
-    def query(self, query, history: List[List[str]] = []):
-        return self.llm.generatorAnswer(query, history)
+    def query(self, query, history: List[List[str]] = [], system_role: str = ""):
+        return self.llm.generatorAnswer(query, history, system_role)
 
     def math_query(self, query):
         llm_math_chain = LLMMathChain(llm=self.llm, verbose=True)

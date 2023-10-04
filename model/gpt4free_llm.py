@@ -87,9 +87,9 @@ class GPT4LLM(LLM, ABC):
 
     def generatorAnswer(self, prompt: str,
                         history: List[List[str]] = [],
-                        streaming: bool = False):
+                        system_role: str = ""):
         print(f"GPT4LLM generatorAnswer:{prompt}")
-        chat_history = []
+        chat_history = [{"role": "system", "content": system_role}]
         for hist in history[-self.history_len:-1] if self.history_len > 0 else []:
             question = hist[0] if hist[0] is not None else ""
             answer = hist[1] if hist[1] is not None else ""
