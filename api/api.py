@@ -14,7 +14,7 @@ from pydantic import BaseModel, BaseConfig
 from starlette.staticfiles import StaticFiles
 
 from chain.chain import AlphaChain
-from model.gpt4free_llm import GPT4LLM
+from model.gpt4free_llm import GPT4LLM, call_g4f_model
 from itoken import check_token
 
 BaseConfig.arbitrary_types_allowed = True
@@ -87,58 +87,6 @@ class OpenaiChatMessage(BaseResponse):
         }
 
 
-class OpenaiModelData:
-    id: str
-    object: str
-    created: int
-    owned_by: str
-
-    def __init__(self, id: str, object: str, created: int, owned_by: str) -> None:
-        self.id = id
-        self.object = object
-        self.created = created
-        self.owned_by = owned_by
-
-
-class OpenaiDataResponse(BaseResponse):
-    object: str = pydantic.Field(default="list", description="object")
-    data: List[OpenaiModelData] = pydantic.Field(
-        default=[
-            OpenaiModelData("deepai", "model", 1686935002, "organization-owner"),
-            OpenaiModelData("yqcloud", "model", 1686935002, "organization-owner"),
-            OpenaiModelData("gptgo", "model", 1686935002, "organization-owner"),
-            OpenaiModelData("aivvm", "model", 1686935002, "organization-owner"),
-        ], description="data")
-
-    class Config:
-        schema_extra = {
-            "examples": {
-                "object": "list",
-                "data": [
-                    {
-                        "id": "model-id-0",
-                        "object": "model",
-                        "created": 1686935002,
-                        "owned_by": "organization-owner"
-                    },
-                    {
-                        "id": "model-id-1",
-                        "object": "model",
-                        "created": 1686935002,
-                        "owned_by": "organization-owner",
-                    },
-                    {
-                        "id": "model-id-2",
-                        "object": "model",
-                        "created": 1686935002,
-                        "owned_by": "openai"
-                    },
-                ],
-            }
-
-        }
-
-
 class OpenaiTokenResponse(BaseResponse):
     data: Dict = pydantic.Field(..., description="data")
 
@@ -170,7 +118,7 @@ async def openai_chat(
     if not check_token(token):
         return BaseResponse(code=500, msg="tokenerror")
 
-    model = "yqcloud"
+    model = call_g4f_model()
     history_messages = messages[:-1]
 
     chat_history = []
@@ -213,10 +161,6 @@ async def openai_chat(
     return BaseResponse(code=500)
 
 
-async def openai_models():
-    return OpenaiDataResponse()
-
-
 async def openai_chat_token(
         user_name: str = Body(..., description="user_name", examples="user"),
         user_secret: str = Body(..., description="user_secret", examples="secret"),
@@ -253,7 +197,6 @@ def api_start(host, port):
 
     app.post("/v1/login", response_model=OpenaiTokenResponse)(openai_chat_token)
     app.post("/v1/chat/completions", response_model=OpenaiChatMessage)(openai_chat)
-    app.get("/v1/models", response_model=OpenaiDataResponse)(openai_models)
 
     app.mount("/static", StaticFiles(directory="static"), name="static")
 

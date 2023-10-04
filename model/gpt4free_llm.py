@@ -1,4 +1,5 @@
 import asyncio
+import random
 from abc import ABC
 from typing import Optional, List
 import g4f
@@ -16,6 +17,11 @@ class AnswerResult:
     llm_output: Optional[dict] = None
 
 
+def call_g4f_model():
+    my_list = ["deepai", "yqcloud", "gptgo", "aivvm"]
+    random_value = random.choice(my_list)
+    return random_value
+
 def call_g4f_provider(model: str, messages: []):
     response: str
     try:
@@ -32,7 +38,6 @@ def call_g4f_provider(model: str, messages: []):
                 model=g4f.models.default.name,
                 messages=messages,
             ))
-            # response = asyncio.run()
         if model == "gptgo":
             provider = g4f.Provider.GptGo
             response = loop.run_until_complete(provider.create_async(
