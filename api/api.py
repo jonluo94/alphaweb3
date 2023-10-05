@@ -15,7 +15,7 @@ from starlette.staticfiles import StaticFiles
 
 from chain.chain import AlphaChain
 from model.gpt4free_llm import GPT4LLM, call_g4f_model
-from util.token_util import check_token
+from util.token_util import check_token, get_token, check_token_balance, compute_token_balance
 
 BaseConfig.arbitrary_types_allowed = True
 
@@ -87,7 +87,7 @@ class OpenaiChatMessage(BaseResponse):
         }
 
 
-class OpenaiTokenResponse(BaseResponse):
+class DataResponse(BaseResponse):
     data: Dict = pydantic.Field(..., description="data")
 
     class Config:
@@ -117,6 +117,8 @@ async def openai_chat(
     token = authorization.replace("Bearer ", "")
     if not check_token(token):
         return BaseResponse(code=500, msg="tokenerror")
+    if not check_token_balance(token):
+        return BaseResponse(code=500, msg="balance is 0")
 
     model = call_g4f_model()
     history_messages = messages[:-1]
@@ -156,12 +158,15 @@ async def openai_chat(
                 "total_tokens": 30
             },
         )
+        # 计算
+        bal = compute_token_balance(token)
+        print(token, bal)
         return rt
 
     return BaseResponse(code=500)
 
 
-async def openai_chat_token(
+async def chat_token(
         user_name: str = Body(..., description="user_name", examples="user"),
         user_secret: str = Body(..., description="user_secret", examples="secret"),
 ):
@@ -172,7 +177,7 @@ async def openai_chat_token(
     secret = hashed.hexdigest()
     # 获取哈希值
     if secret != user_secret:
-        return OpenaiTokenResponse(msg="secreterror", data={})
+        return DataResponse(msg="secreterror", data={})
 
     token = f"alphaweb3-{user_name}-{user_secret}"
     sha256 = hashlib.sha256()
@@ -180,7 +185,16 @@ async def openai_chat_token(
     token_value = sha256.hexdigest()
     print(user_name, secret, token_value)  # 输出哈希值
 
-    return OpenaiTokenResponse(data={"token": token_value})
+    user, balance = get_token(token_value)
+    return DataResponse(data={"token": token_value, "balance": balance})
+
+
+async def chat_token_balance(
+        authorization: Optional[str] = Header(None),
+):
+    token = authorization.replace("Bearer ", "")
+    user, balance = get_token(token)
+    return DataResponse(data={"userName": user, "balance": balance})
 
 
 def api_start(host, port):
@@ -195,7 +209,8 @@ def api_start(host, port):
         allow_headers=["*"],
     )
 
-    app.post("/v1/login", response_model=OpenaiTokenResponse)(openai_chat_token)
+    app.post("/v1/login", response_model=DataResponse)(chat_token)
+    app.get("/v1/balance", response_model=DataResponse)(chat_token_balance)
     app.post("/v1/chat/completions", response_model=OpenaiChatMessage)(openai_chat)
 
     app.mount("/static", StaticFiles(directory="static"), name="static")
