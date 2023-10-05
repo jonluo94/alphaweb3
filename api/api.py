@@ -116,9 +116,9 @@ async def openai_chat(
     # 检查token
     token = authorization.replace("Bearer ", "")
     if not check_token(token):
-        return BaseResponse(code=500, msg="tokenerror")
+        return OpenaiChatMessage(code=500, msg="tokenerror")
     if not check_token_balance(token):
-        return BaseResponse(code=500, msg="balance is 0")
+        return OpenaiChatMessage(code=500, msg="balance is 0")
 
     model = call_g4f_model()
     history_messages = messages[:-1]
@@ -163,7 +163,7 @@ async def openai_chat(
         print(token, bal)
         return rt
 
-    return BaseResponse(code=500)
+    return OpenaiChatMessage(code=500)
 
 
 async def chat_token(
