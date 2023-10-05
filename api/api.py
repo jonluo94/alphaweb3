@@ -54,12 +54,12 @@ class OpenaiChatChoice:
 
 
 class OpenaiChatMessage(BaseResponse):
-    id: str = pydantic.Field(..., description="id")
+    id: str = pydantic.Field(None, description="id")
     object: str = pydantic.Field(default="chat.completion", description="object")
-    model: str = pydantic.Field(..., description="model")
-    created: int = pydantic.Field(..., description="created")
-    choices: List[OpenaiChatChoice] = pydantic.Field(..., description="choices")
-    usage: Dict = pydantic.Field(..., description="usage")
+    model: str = pydantic.Field(None, description="model")
+    created: int = pydantic.Field(None, description="created")
+    choices: List[OpenaiChatChoice] = pydantic.Field(None, description="choices")
+    usage: Dict = pydantic.Field(None, description="usage")
 
     class Config:
         schema_extra = {
