@@ -22,13 +22,13 @@ BaseConfig.arbitrary_types_allowed = True
 
 class BaseResponse(BaseModel):
     code: int = pydantic.Field(200, description="HTTP status code")
-    msg: str = pydantic.Field("success", description="HTTP status message")
+    message: str = pydantic.Field("success", description="HTTP status message")
 
     class Config:
         schema_extra = {
             "examples": {
                 "code": 200,
-                "msg": "success",
+                "message": "success",
             }
         }
 
@@ -116,9 +116,9 @@ async def openai_chat(
     # 检查token
     token = authorization.replace("Bearer ", "")
     if not check_token(token):
-        return OpenaiChatMessage(code=500, msg="tokenerror")
+        return OpenaiChatMessage(code=500, message="token无效")
     if not check_token_balance(token):
-        return OpenaiChatMessage(code=500, msg="balance is 0")
+        return OpenaiChatMessage(code=500, message="当天次数不足")
 
     model = call_g4f_model()
     history_messages = messages[:-1]
