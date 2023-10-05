@@ -15,7 +15,7 @@ from starlette.staticfiles import StaticFiles
 
 from chain.chain import AlphaChain
 from model.gpt4free_llm import GPT4LLM, call_g4f_model
-from itoken import check_token
+from util.token_util import check_token
 
 BaseConfig.arbitrary_types_allowed = True
 

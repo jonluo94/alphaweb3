@@ -3,7 +3,7 @@ import os
 
 
 def check_token(token: str):
-    current_path = os.path.abspath(os.path.dirname(__file__))
+    current_path = os.path.dirname(os.path.dirname(__file__))
     token_file = os.path.join(current_path, "token", token)
     return os.path.exists(token_file)
 
@@ -20,12 +20,9 @@ def init_token(user_name: str):
     sha256.update(tk.encode('utf-8'))
     token_value = sha256.hexdigest()
 
-    current_path = os.path.abspath(os.path.dirname(__file__))
+    current_path = os.path.dirname(os.path.dirname(__file__))
+
     with open(os.path.join(current_path, "token", token_value), 'w') as f:
         f.write(f'{user_name}:{user_secret}')
 
     print(user_name, user_secret, token_value)
-
-
-if __name__ == '__main__':
-    init_token("jonluo")
