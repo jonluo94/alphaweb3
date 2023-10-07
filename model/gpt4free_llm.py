@@ -19,7 +19,7 @@ class AnswerResult:
 
 
 def call_g4f_model():
-    my_list = ["yqcloud", "gptgo"]
+    my_list = ["gptgo"]
     random_value = random.choice(my_list)
     print("call_g4f_model", random_value)
     return random_value
