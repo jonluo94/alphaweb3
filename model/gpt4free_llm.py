@@ -19,7 +19,7 @@ class AnswerResult:
 
 
 def call_g4f_model():
-    my_list = ["gptgo"]
+    my_list = ["you","bing","gptgo","chatgptai","vitalentum"]
     random_value = random.choice(my_list)
     print("call_g4f_model", random_value)
     return random_value
@@ -29,14 +29,14 @@ def call_g4f_provider(model: str, messages: []):
     response: str
     try:
 
-        if model == "deepai":
-            provider = g4f.Provider.DeepAi
+        if model == "you":
+            provider = g4f.Provider.You
             response = loop.run_until_complete(provider.create_async(
                 model=g4f.models.default.name,
                 messages=messages,
             ))
-        if model == "yqcloud":
-            provider = g4f.Provider.Yqcloud
+        if model == "bing":
+            provider = g4f.Provider.Bing
             response = loop.run_until_complete(provider.create_async(
                 model=g4f.models.default.name,
                 messages=messages,
@@ -48,9 +48,14 @@ def call_g4f_provider(model: str, messages: []):
                 messages=messages,
             ))
 
-        if model == "aivvm":
+        if model == "chatgptai":
             response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 provider=g4f.Provider.Aivvm,
+                                                 provider=g4f.Provider.ChatgptAi,
+                                                 messages=messages,
+                                                 stream=False, )
+        if model == "vitalentum":
+            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
+                                                 provider=g4f.Provider.Vitalentum,
                                                  messages=messages,
                                                  stream=False, )
 
@@ -62,7 +67,7 @@ def call_g4f_provider(model: str, messages: []):
 
 
 class GPT4LLM(LLM, ABC):
-    history_len: int = 10
+    history_len: int = 5
     model_name: str = None
 
     def __init__(self, model_name: str = "deepai"):
@@ -77,7 +82,7 @@ class GPT4LLM(LLM, ABC):
     def _history_len(self) -> int:
         return self.history_len
 
-    def set_history_len(self, history_len: int = 10) -> None:
+    def set_history_len(self, history_len: int = 5) -> None:
         self.history_len = history_len
 
     def _call(self, prompt: str, stop: Optional[List[str]] = None) -> str:
