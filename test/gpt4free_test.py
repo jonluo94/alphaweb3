@@ -4,24 +4,22 @@ _providers = [
     g4f.Provider.Aichat,
     g4f.Provider.ChatBase,
     g4f.Provider.Bing,
-    g4f.Provider.CodeLinkAva,
-    g4f.Provider.DeepAi,
     g4f.Provider.GptGo,
-    g4f.Provider.Wewordle,
     g4f.Provider.You,
     g4f.Provider.Yqcloud,
 ]
 
 
-async def run_provider(provider: g4f.Provider.AsyncProvider):
+async def run_provider(provider: g4f.Provider.BaseProvider):
     try:
-        response = await provider.create_async(
-            model=g4f.models.default.name,
-            messages=[{"role": "user", "content": "你好"}],
+        response = await g4f.ChatCompletion.create_async(
+            model=g4f.models.default,
+            messages=[{"role": "user", "content": "Hello"}],
+            provider=provider,
         )
         print(f"{provider.__name__}:", response)
     except Exception as e:
-        print(f"{provider.__name__}:错误", e)
+        print(f"{provider.__name__}:", e)
 
 
 async def run_all():
@@ -37,24 +35,18 @@ def run_all_pd():
         Acytoo,
         Aichat,
         Ails,
-        Aivvm,
         Bard,
         Bing,
         ChatBase,
         ChatgptAi,
-        ChatgptLogin,
-        CodeLinkAva,
-        DeepAi,
         H2o,
         HuggingChat,
-        Opchatgpts,
         OpenAssistant,
         OpenaiChat,
         Raycast,
         Theb,
         Vercel,
         Vitalentum,
-        Wewordle,
         Ylokh,
         You,
         Yqcloud,
@@ -66,34 +58,32 @@ def run_all_pd():
         Acytoo,
         Aichat,
         Ails,
-        Aivvm,
         Bard,
         Bing,
         ChatBase,
         ChatgptAi,
-        ChatgptLogin,
-        CodeLinkAva,
-        DeepAi,
         H2o,
         HuggingChat,
-        Opchatgpts,
         OpenAssistant,
         OpenaiChat,
         Raycast,
         Theb,
         Vercel,
         Vitalentum,
-        Wewordle,
         Ylokh,
         You,
         Yqcloud,
     ]
     for provider in pds:
         try:
-            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 provider=provider,
-                                                 messages=[{"role": "user", "content": "你好"}],
-                                                 stream=False, )
+            # Set with provider
+            response = g4f.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                provider=g4f.Provider.Aichat,
+                messages=[{"role": "user", "content": "Hello"}],
+                stream=False,
+            )
+
             print(f"{provider.__name__}:", response)
         except Exception as e:
             print(f"{provider.__name__}:错误", e)

@@ -32,19 +32,25 @@ def call_g4f_provider(model: str, messages: []):
         if model == "you":
             provider = g4f.Provider.You
             response = loop.run_until_complete(provider.create_async(
-                model=g4f.models.default.name,
+                model="gpt-3.5-turbo",
+                messages=messages,
+            ))
+        if model == "chatbase":
+            provider = g4f.Provider.ChatBase
+            response = loop.run_until_complete(provider.create_async(
+                model="gpt-3.5-turbo",
                 messages=messages,
             ))
         if model == "bing":
             provider = g4f.Provider.Bing
             response = loop.run_until_complete(provider.create_async(
-                model=g4f.models.default.name,
+                model="gpt-3.5-turbo",
                 messages=messages,
             ))
         if model == "gptgo":
             provider = g4f.Provider.GptGo
             response = loop.run_until_complete(provider.create_async(
-                model=g4f.models.default.name,
+                model="gpt-3.5-turbo",
                 messages=messages,
             ))
 
