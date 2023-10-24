@@ -19,7 +19,7 @@ class AnswerResult:
 
 
 def call_g4f_model():
-    my_list = ["gptgo"]
+    my_list = ["gptgo","chatbase","yqcloud"]
     random_value = random.choice(my_list)
     print("call_g4f_model", random_value)
     return random_value
@@ -29,6 +29,13 @@ def call_g4f_provider(model: str, messages: []):
     response: str
     try:
 
+        if model == "yqcloud":
+            provider = g4f.Provider.Yqcloud
+            response = loop.run_until_complete(g4f.ChatCompletion.create_async(
+                model=g4f.models.default,
+                messages=messages,
+                provider=provider,
+            ))
         if model == "you":
             provider = g4f.Provider.You
             response = loop.run_until_complete(g4f.ChatCompletion.create_async(
