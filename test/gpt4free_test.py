@@ -55,22 +55,13 @@ def run_all_pd():
     # Usage:
     pds = [
         AItianhu,
-        Acytoo,
         Aichat,
-        Ails,
         Bard,
         Bing,
         ChatBase,
         ChatgptAi,
-        H2o,
-        HuggingChat,
-        OpenAssistant,
         OpenaiChat,
-        Raycast,
-        Theb,
         Vercel,
-        Vitalentum,
-        Ylokh,
         You,
         Yqcloud,
     ]
