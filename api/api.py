@@ -15,6 +15,7 @@ from starlette.staticfiles import StaticFiles
 
 from chain.chain import AlphaChain
 from model.gpt4free_llm import GPT4LLM, call_g4f_model
+from sd.sd4free import SD, call_sd_model
 from util.token_util import check_token, get_token, check_token_balance, compute_token_balance
 
 BaseConfig.arbitrary_types_allowed = True
@@ -83,6 +84,21 @@ class OpenaiChatMessage(BaseResponse):
                     "prompt_tokens": 57,
                     "total_tokens": 74
                 }
+            }
+        }
+
+
+class SDGenMessage(BaseResponse):
+    model: str = pydantic.Field(None, description="model")
+    created: int = pydantic.Field(None, description="created")
+    picture: str = pydantic.Field(None, description="picture")
+
+    class Config:
+        schema_extra = {
+            "examples": {
+                "picture": "chatcmpl-7QyqpwdfhqwajicIEznoc6Q47XAyW",
+                "created": 1677664795,
+                "model": "gpt-3.5-turbo-0613"
             }
         }
 
@@ -166,6 +182,35 @@ async def openai_chat(
     return OpenaiChatMessage(code=500)
 
 
+async def sd_gen(
+        authorization: Optional[str] = Header(None),
+        model: str = Body(default="yqcloud", description="LLM", examples="yqcloud"),
+        prompt: str = Body(default="Prompt", description="Prompt", examples="Prompt"),
+):
+    # 检查token
+    token = authorization.replace("Bearer ", "")
+    if not check_token(token):
+        return OpenaiChatMessage(code=500, message="token无效")
+    if not check_token_balance(token):
+        return OpenaiChatMessage(code=500, message="当天次数不足")
+
+    model = call_sd_model()
+
+
+    instance = SD(model)
+    picture = instance.generator(prompt=prompt)
+
+    rt = SDGenMessage(
+        model=model,
+        created=time.time(),
+        picture=picture,
+    )
+    # 计算
+    bal = compute_token_balance(token)
+    print(token, bal)
+    return rt
+
+
 async def chat_token(
         user_name: str = Body(..., description="user_name", examples="user"),
         user_secret: str = Body(..., description="user_secret", examples="secret"),
@@ -212,6 +257,7 @@ def api_start(host, port):
     app.post("/v1/login", response_model=DataResponse)(chat_token)
     app.get("/v1/balance", response_model=DataResponse)(chat_token_balance)
     app.post("/v1/chat/completions", response_model=OpenaiChatMessage)(openai_chat)
+    app.post("/v1/chat/sdgen", response_model=SDGenMessage)(sd_gen)
 
     app.mount("/static", StaticFiles(directory="static"), name="static")
 

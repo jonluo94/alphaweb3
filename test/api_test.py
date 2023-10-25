@@ -5,8 +5,8 @@ headers = {
     'Accept': 'application/json'
 }
 
-# url = "http://127.0.0.1:7861"
-url = "http://47.88.16.20:17861"
+url = "http://127.0.0.1:7861"
+# url = "http://47.88.16.20:17861"
 
 def test_openai_model():
     # grgbrain/upload_knowledge_data
@@ -26,6 +26,17 @@ def test_openai_chat():
     }, headers=headers)
     print(r.json())
 
+def test_sd_gen():
+    # grgbrain/upload_knowledge_data
+    r = requests.post(url+'/v1/chat/sdgen', json={
+        "model": "yqcloud",
+        "messages": [
+            {"role": "user", "content": "a black cat"}
+        ]
+    }, headers=headers)
+    print(r.json())
+
 if __name__ == '__main__':
-    test_openai_model()
-    test_openai_chat()
+    # test_openai_model()
+    # test_openai_chat()
+    test_sd_gen()
