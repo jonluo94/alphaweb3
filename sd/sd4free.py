@@ -4,12 +4,16 @@ import random
 import tempfile
 
 from sd.sdxl4free.provider.Diffle import Diffle
+from sd.sdxl4free.provider.Wizmodel import Wizmodel
 from sd.sdxl4free.provider.OpenSkyML import OpenSkyML
 from sd.sdxl4free.provider.S4F import S4F
 
 
-def call_sd_model():
-    my_list = ["s4f", "diffle"]
+def call_sd_model(model :str):
+    if model == "SDXL":
+        my_list = ["s4f", "diffle"]
+    if model == "WIZ":
+        my_list = ["wizmodel"]
     random_value = random.choice(my_list)
     print("call_s4f_model", random_value)
     return random_value
@@ -28,6 +32,9 @@ def call_sd_provider(model: str, prompt: str):
             sd.generate_image(prompt).save(png_file)
         if model == "openskyml":
             sd = OpenSkyML()
+            sd.generate_image(prompt).save(png_file)
+        if model == "wizmodel":
+            sd = Wizmodel(result_file=png_file)
             sd.generate_image(prompt).save(png_file)
 
         with open(png_file, "rb") as file:

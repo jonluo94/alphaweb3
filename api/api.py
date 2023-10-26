@@ -184,7 +184,7 @@ async def openai_chat(
 
 async def sd_gen(
         authorization: Optional[str] = Header(None),
-        model: str = Body(default="yqcloud", description="LLM", examples="yqcloud"),
+        model: str = Body(default="SDXL", description="model", examples="model"),
         prompt: str = Body(default="Prompt", description="Prompt", examples="Prompt"),
 ):
     # 检查token
@@ -194,8 +194,8 @@ async def sd_gen(
     if not check_token_balance(token):
         return OpenaiChatMessage(code=500, message="当天次数不足")
 
-    model = call_sd_model()
-
+    print(model)
+    model = call_sd_model(model)
 
     instance = SD(model)
     picture = instance.generator(prompt=prompt)
