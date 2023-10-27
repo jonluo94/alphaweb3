@@ -18,9 +18,12 @@ class AnswerResult:
     llm_output: Optional[dict] = None
 
 
-def call_g4f_model():
+def call_g4f_model(model :str):
     my_list = ["gptgo","chatbase","yqcloud"]
-    random_value = random.choice(my_list)
+    if model in my_list:
+        random_value = random.choice(my_list)
+    else:
+        random_value = my_list[0]
     print("call_g4f_model", random_value)
     return random_value
 

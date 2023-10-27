@@ -136,8 +136,7 @@ async def openai_chat(
     if not check_token_balance(token):
         return OpenaiChatMessage(code=500, message="当天次数不足")
 
-    if model == "":
-        model = call_g4f_model()
+    model = call_g4f_model(model)
     history_messages = messages[:-1]
 
     chat_history = []
