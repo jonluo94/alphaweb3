@@ -119,7 +119,7 @@ class DataResponse(BaseResponse):
 
 async def openai_chat(
         authorization: Optional[str] = Header(None),
-        model: str = Body(default="yqcloud", description="LLM", examples="yqcloud"),
+        model: str = Body(default="", description="LLM", examples="gptgo"),
         messages: List[Dict] = Body(
             None,
             description="questions and answers",
@@ -136,7 +136,8 @@ async def openai_chat(
     if not check_token_balance(token):
         return OpenaiChatMessage(code=500, message="当天次数不足")
 
-    model = call_g4f_model()
+    if model == "":
+        model = call_g4f_model()
     history_messages = messages[:-1]
 
     chat_history = []
