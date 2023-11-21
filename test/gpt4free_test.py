@@ -32,25 +32,18 @@ async def run_all():
 def run_all_pd():
     from g4f.Provider import (
         AItianhu,
-        Acytoo,
         Aichat,
-        Ails,
         Bard,
         Bing,
         ChatBase,
         ChatgptAi,
-        H2o,
-        HuggingChat,
-        OpenAssistant,
         OpenaiChat,
-        Raycast,
-        Theb,
         Vercel,
-        Vitalentum,
-        Ylokh,
         You,
         Yqcloud,
     )
+
+
 
     # Usage:
     pds = [
@@ -70,7 +63,7 @@ def run_all_pd():
             # Set with provider
             response = g4f.ChatCompletion.create(
                 model="gpt-3.5-turbo",
-                provider=g4f.Provider.Aichat,
+                provider=provider,
                 messages=[{"role": "user", "content": "Hello"}],
                 stream=False,
             )
