@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.10
 ENV PATH /usr/local/bin: $PATH
 ADD . /usr/local/alphaweb3
 WORKDIR /usr/local/alphaweb3
