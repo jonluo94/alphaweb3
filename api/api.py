@@ -1,7 +1,6 @@
 import hashlib
 import json
 import os
-import parser
 
 import time
 import uuid
