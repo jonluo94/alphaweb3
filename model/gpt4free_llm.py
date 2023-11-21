@@ -19,7 +19,8 @@ class AnswerResult:
 
 
 def call_g4f_model(model :str):
-    my_list = ["gptgo","chatbase","yqcloud"]
+    # my_list = ["gptgo","chatbase","yqcloud"]
+    my_list = ["chatbase"]
     if model in my_list:
         random_value = random.choice(my_list)
     else:
