@@ -20,7 +20,7 @@ class AnswerResult:
 
 def call_g4f_model(model :str):
     # my_list = ["gptgo","chatbase","yqcloud"]
-    my_list = ["chatbase"]
+    my_list = ["gptalk","gptforlove"]
     if model in my_list:
         random_value = random.choice(my_list)
     else:
@@ -84,6 +84,17 @@ def call_g4f_provider(model: str, messages: []):
                                                  messages=messages,
                                                  stream=False, )
 
+        if model == "gptalk":
+            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
+                                                 provider=g4f.Provider.GPTalk,
+                                                 messages=messages,
+                                                 stream=False, )
+
+        if model == "gptforlove":
+            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
+                                                 provider=g4f.Provider.GptForLove,
+                                                 messages=messages,
+                                                 stream=False, )
     except Exception as e:
         response = f"{model}:{e}"
         print(f"{model}:错误", e)

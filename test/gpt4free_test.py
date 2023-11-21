@@ -1,5 +1,6 @@
 import g4f, asyncio
 
+
 _providers = [
     g4f.Provider.Aichat,
     g4f.Provider.ChatBase,
@@ -14,7 +15,7 @@ async def run_provider(provider: g4f.Provider.BaseProvider):
     try:
         response = await g4f.ChatCompletion.create_async(
             model=g4f.models.default,
-            messages=[{"role": "user", "content": "Hello"}],
+            messages=[{"role": "user", "content": "你好"}],
             provider=provider,
         )
         print(f"{provider.__name__}:", response)
@@ -41,6 +42,12 @@ def run_all_pd():
         Vercel,
         You,
         Yqcloud,
+        FakeGpt,
+        FreeGpt,
+        GPTalk,
+        GptForLove,
+        GptGo,
+        Hashnode
     )
 
 
@@ -57,6 +64,12 @@ def run_all_pd():
         Vercel,
         You,
         Yqcloud,
+        FakeGpt,
+        FreeGpt,
+        GPTalk,
+        GptForLove,
+        GptGo,
+        Hashnode
     ]
     for provider in pds:
         try:
@@ -64,7 +77,7 @@ def run_all_pd():
             response = g4f.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 provider=provider,
-                messages=[{"role": "user", "content": "Hello"}],
+                messages=[{"role": "user", "content": "你好"}],
                 stream=False,
             )
 
