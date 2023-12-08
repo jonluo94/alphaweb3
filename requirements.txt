@@ -1,6 +1,6 @@
 langchain~=0.0.305
 google-search-results
-g4f==0.1.8.8
+g4f==0.1.9.2
 pydantic~=1.10.7
 fastapi~=0.103.2
 requests~=2.31.0
