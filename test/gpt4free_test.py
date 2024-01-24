@@ -1,6 +1,5 @@
 import g4f, asyncio
 
-
 _providers = [
     g4f.Provider.Aichat,
     g4f.Provider.ChatBase,
@@ -33,43 +32,73 @@ async def run_all():
 def run_all_pd():
     from g4f.Provider import (
         AItianhu,
+        AItianhuSpace,
+        AiAsk,
         Aichat,
-        Bard,
-        Bing,
         ChatBase,
+        ChatForAi,
         ChatgptAi,
-        OpenaiChat,
-        Vercel,
-        You,
-        Yqcloud,
+        ChatgptX,
         FakeGpt,
         FreeGpt,
         GPTalk,
         GptForLove,
         GptGo,
-        Hashnode
+        Hashnode,
+        MyShell,
+        OpenaiChat,
+        Theb,
+        Vercel,
+        You,
+        Yqcloud,
+        Acytoo,
+        Aibn,
+        Ails,
+        Chatgpt4Online,
+        ChatgptDemo,
+        ChatgptDuo,
+        ChatgptFree,
+        ChatgptLogin,
+        Cromicle,
+        GptGod,
+        Opchatgpts,
+        Ylokh
     )
-
-
 
     # Usage:
     pds = [
         AItianhu,
+        AItianhuSpace,
+        AiAsk,
         Aichat,
-        Bard,
-        Bing,
         ChatBase,
+        ChatForAi,
         ChatgptAi,
-        OpenaiChat,
-        Vercel,
-        You,
-        Yqcloud,
+        ChatgptX,
         FakeGpt,
         FreeGpt,
         GPTalk,
         GptForLove,
         GptGo,
-        Hashnode
+        Hashnode,
+        MyShell,
+        OpenaiChat,
+        Theb,
+        Vercel,
+        You,
+        Yqcloud,
+        Acytoo,
+        Aibn,
+        Ails,
+        Chatgpt4Online,
+        ChatgptDemo,
+        ChatgptDuo,
+        ChatgptFree,
+        ChatgptLogin,
+        Cromicle,
+        GptGod,
+        Opchatgpts,
+        Ylokh
     ]
     for provider in pds:
         try:
@@ -84,7 +113,6 @@ def run_all_pd():
             print(f"{provider.__name__}:", response)
         except Exception as e:
             print(f"{provider.__name__}:错误", e)
-
 
 
 if __name__ == '__main__':
