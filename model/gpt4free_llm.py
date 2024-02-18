@@ -6,12 +6,6 @@ import g4f
 from langchain.llms.base import LLM
 from langchain.llms.utils import enforce_stop_tokens
 
-import nest_asyncio
-
-nest_asyncio.apply()
-loop = asyncio.get_event_loop()
-
-
 class AnswerResult:
     """消息实体"""
     history: List[List[str]] = []
@@ -19,10 +13,7 @@ class AnswerResult:
 
 
 def call_g4f_model(model :str):
-    # my_list = ["gptgo","chatbase","yqcloud"]
-    # my_list = ["chatbase","chatgptai"]
-    # my_list = ["gptgo","fakegpt","chatbase"]
-    my_list = ["chatbase","chatgptai","fakegpt","chatgptdemo"]
+    my_list = ["aura","chatgptdemo","koala","you"]
     if model in my_list:
         random_value = random.choice(my_list)
     else:
@@ -34,78 +25,24 @@ def call_g4f_model(model :str):
 def call_g4f_provider(model: str, messages: []):
     response: str
     try:
-
-        if model == "yqcloud":
-            provider = g4f.Provider.Yqcloud
-            response = loop.run_until_complete(g4f.ChatCompletion.create_async(
-                model=g4f.models.default,
-                messages=messages,
-                provider=provider,
-            ))
-        if model == "you":
-            provider = g4f.Provider.You
-            response = loop.run_until_complete(g4f.ChatCompletion.create_async(
-                model=g4f.models.default,
-                messages=messages,
-                provider=provider,
-            ))
-        if model == "chatbase":
-            provider = g4f.Provider.ChatBase
-            response = loop.run_until_complete(g4f.ChatCompletion.create_async(
-                model=g4f.models.default,
-                messages=messages,
-                provider=provider,
-            ))
-        if model == "bing":
-            provider = g4f.Provider.Bing
-            response = loop.run_until_complete(g4f.ChatCompletion.create_async(
-                model=g4f.models.default,
-                messages=messages,
-                provider=provider,
-            ))
-        if model == "gptgo":
-            provider = g4f.Provider.GptGo
-            response = loop.run_until_complete(g4f.ChatCompletion.create_async(
-                model=g4f.models.default,
-                messages=messages,
-                provider=provider,
-            ))
-        if model == "chatgptai":
+        if model == "aura":
             response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 provider=g4f.Provider.ChatgptAi,
-                                                 messages=messages,
-                                                 stream=False, )
-        if model == "aivvm":
-            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 provider=g4f.Provider.Aivvm,
-                                                 messages=messages,
-                                                 stream=False, )
-        if model == "vitalentum":
-            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 provider=g4f.Provider.Vitalentum,
-                                                 messages=messages,
-                                                 stream=False, )
-
-        if model == "gptalk":
-            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 provider=g4f.Provider.GPTalk,
-                                                 messages=messages,
-                                                 stream=False, )
-
-        if model == "gptforlove":
-            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 provider=g4f.Provider.GptForLove,
-                                                 messages=messages,
-                                                 stream=False, )
-
-        if model == "fakegpt":
-            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 provider=g4f.Provider.FakeGpt,
+                                                 provider=g4f.Provider.Aura,
                                                  messages=messages,
                                                  stream=False, )
         if model == "chatgptdemo":
             response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
                                                  provider=g4f.Provider.ChatgptDemo,
+                                                 messages=messages,
+                                                 stream=False, )
+        if model == "koala":
+            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
+                                                 provider=g4f.Provider.Koala,
+                                                 messages=messages,
+                                                 stream=False, )
+        if model == "you":
+            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
+                                                 provider=g4f.Provider.You,
                                                  messages=messages,
                                                  stream=False, )
     except Exception as e:
