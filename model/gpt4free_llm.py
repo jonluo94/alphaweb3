@@ -6,6 +6,9 @@ import g4f
 from langchain.llms.base import LLM
 from langchain.llms.utils import enforce_stop_tokens
 
+import nest_asyncio
+nest_asyncio.apply()
+
 class AnswerResult:
     """消息实体"""
     history: List[List[str]] = []
