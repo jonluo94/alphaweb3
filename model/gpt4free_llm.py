@@ -32,11 +32,12 @@ def call_g4f_provider(model: str, messages: []):
     response: str
     try:
         client = Client()
-        response = client.chat.completions.create(
+        res = client.chat.completions.create(
             model=model,
             messages=messages,
         )
-        print(model, response.choices[0].message.content)
+        response = res.choices[0].message.content
+        print(model, res.choices[0].message.content)
 
     except Exception as e:
         response = f"{model}:{e}"
