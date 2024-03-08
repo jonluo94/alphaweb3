@@ -65,7 +65,8 @@ def run_all_pd():
 
 def run_all_other():
     client = Client()
-    models = ["gpt-3.5-turbo", "gpt-4", "claude-v2", "openchat_3.5", "dolphin-mixtral-8x7b", "airoboros-l2-70b","gemini"]
+    models = ["gpt-3.5-turbo", "gpt-4", "claude-v2", "openchat_3.5", "dolphin-mixtral-8x7b", "airoboros-l2-70b",
+              "gemini"]
     for model in models:
         try:
             response = client.chat.completions.create(
@@ -80,4 +81,3 @@ def run_all_other():
 if __name__ == '__main__':
     # run_all_pd()
     run_all_other()
-

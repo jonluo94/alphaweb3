@@ -19,7 +19,7 @@ class AnswerResult:
 
 
 def call_g4f_model(model: str):
-    my_list = ["base"]
+    my_list = ["gpt-4", "claude-v2", "dolphin-mixtral-8x7b", "airoboros-l2-70b"]
     if model in my_list:
         random_value = random.choice(my_list)
     else:
@@ -31,29 +31,12 @@ def call_g4f_model(model: str):
 def call_g4f_provider(model: str, messages: []):
     response: str
     try:
-        if model == "base":
-            response = Client().chat.completions.create(model="gpt-3.5-turbo",
-                                                        messages=messages, )
-        if model == "aura":
-            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 provider=g4f.Provider.Aura,
-                                                 messages=messages,
-                                                 stream=False, )
-        if model == "chatgptdemo":
-            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 provider=g4f.Provider.ChatgptDemo,
-                                                 messages=messages,
-                                                 stream=False, )
-        if model == "koala":
-            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 provider=g4f.Provider.Koala,
-                                                 messages=messages,
-                                                 stream=False, )
-        if model == "you":
-            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 provider=g4f.Provider.You,
-                                                 messages=messages,
-                                                 stream=False, )
+        client = Client()
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+        )
+        print(model, response.choices[0].message.content)
 
     except Exception as e:
         response = f"{model}:{e}"
