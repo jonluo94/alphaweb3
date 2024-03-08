@@ -72,3 +72,9 @@ if __name__ == '__main__':
         messages=[{"role": "user", "content": "你好"}],
     )
     print(response.choices[0].message.content)
+
+    response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": "你好"}],
+    )
+    print(response.choices[0].message.content)
