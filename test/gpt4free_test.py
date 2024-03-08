@@ -63,18 +63,21 @@ def run_all_pd():
             print(f"{provider.__name__}:错误", e)
 
 
-if __name__ == '__main__':
-    run_all_pd()
-
+def run_all_other():
     client = Client()
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": "你好"}],
-    )
-    print(response.choices[0].message.content)
+    models = ["gpt-3.5-turbo", "gpt-4", "claude-v2", "openchat_3.5", "dolphin-mixtral-8x7b", "airoboros-l2-70b","gemini"]
+    for model in models:
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": "你好"}],
+            )
+            print(model, response.choices[0].message.content)
+        except Exception as e:
+            print(f"{model}:错误", e)
 
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": "你好"}],
-    )
-    print(response.choices[0].message.content)
+
+if __name__ == '__main__':
+    # run_all_pd()
+    run_all_other()
+
