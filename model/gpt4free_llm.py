@@ -7,7 +7,9 @@ from langchain.llms.base import LLM
 from langchain.llms.utils import enforce_stop_tokens
 
 import nest_asyncio
+
 nest_asyncio.apply()
+
 
 class AnswerResult:
     """消息实体"""
@@ -15,8 +17,8 @@ class AnswerResult:
     llm_output: Optional[dict] = None
 
 
-def call_g4f_model(model :str):
-    my_list = ["koala"]
+def call_g4f_model(model: str):
+    my_list = ["base"]
     if model in my_list:
         random_value = random.choice(my_list)
     else:
@@ -28,6 +30,9 @@ def call_g4f_model(model :str):
 def call_g4f_provider(model: str, messages: []):
     response: str
     try:
+        if model == "base":
+            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
+                                                 messages=messages, )
         if model == "aura":
             response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
                                                  provider=g4f.Provider.Aura,
@@ -48,6 +53,7 @@ def call_g4f_provider(model: str, messages: []):
                                                  provider=g4f.Provider.You,
                                                  messages=messages,
                                                  stream=False, )
+
     except Exception as e:
         response = f"{model}:{e}"
         print(f"{model}:错误", e)
