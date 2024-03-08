@@ -69,6 +69,6 @@ if __name__ == '__main__':
     client = Client()
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": "Hello"}],
+        messages=[{"role": "user", "content": "你好"}],
     )
     print(response.choices[0].message.content)

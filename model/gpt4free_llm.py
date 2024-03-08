@@ -3,6 +3,7 @@ import random
 from abc import ABC
 from typing import Optional, List
 import g4f
+from g4f.client import Client
 from langchain.llms.base import LLM
 from langchain.llms.utils import enforce_stop_tokens
 
@@ -31,8 +32,8 @@ def call_g4f_provider(model: str, messages: []):
     response: str
     try:
         if model == "base":
-            response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
-                                                 messages=messages, )
+            response = Client().chat.completions.create(model="gpt-3.5-turbo",
+                                                        messages=messages, )
         if model == "aura":
             response = g4f.ChatCompletion.create(model="gpt-3.5-turbo",
                                                  provider=g4f.Provider.Aura,
